@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Acceso al Culto</title>
+  <style>
+    body {
+      background-color: black;
+      color: orange;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0 10px;
+    }
+    .terminal {
+      width: 100%;
+      max-width: 500px;
+      border: 2px solid orange;
+      padding: 20px;
+      box-shadow: 0 0 10px orange;
+      box-sizing: border-box;
+    }
+    input {
+      width: 100%;
+      background-color: black;
+      border: none;
+      color: orange;
+      font-size: 1.2rem;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 10px;
+      margin-top: 10px;
+      outline: none;
+    }
+    .output {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      min-height: 60px;
+    }
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background-color: ora;
+      animation: blink 1s step-start infinite;
+    }
+    @keyframes blink {
+      50% {
+        background-color: black;
+      }
+    }
+
+    /* Celulares muy chicos */
+    @media (max-height: 500px) {
+      body {
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div><strong>Bienvenido.</strong> Ingrese la contraseña para ingresar al culto.</div>
+    <div>P15T4: 717UL0 D3L 73M4.</div>
+    <div class="input-section" id="inputSection">
+    <input type="text" id="name" placeholder="Tu nombre">
+    <input type="text" id="passwordInput" placeholder="Contraseña">
+    </div>
+    <div class="output" id="output"><span class="cursor"></span></div>
+  </div>
+
+  <!-- Audios -->
+  <audio id="successSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+  <audio id="errorSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+  <script>
+    const inputSection = document.getElementById('inputSection');
+    const name = document.getElementById('name');
+    const input = document.getElementById('passwordInput');
+    const output = document.getElementById('output');
+    const successSound = document.getElementById('successSound');
+    const errorSound = document.getElementById('errorSound');
+
+    function typeEffect(text, callback) {
+      output.innerHTML = '';
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          output.innerHTML += text[i];
+          i++;
+          setTimeout(type, 40);
+        } else {
+          if (callback) callback();
+        }
+      }
+      type();
+    }
+
+    input.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        const value = input.value.trim();
+        input.disabled = true;
+        input.blur();
+        if (value === "Compilado sin errores") {} else if (value === "compilado sin errores") { 
+          successSound.play();
+          inputSection.style.display = 'none';
+          const userName = name.value.trim();
+          typeEffect(`Acceso concedido. Iniciando el sistema...\n¡Bienvenido al culto joven, ${userName}!`, () => {
+            input.disabled = false;
+            input.focus();
+          });
+        } else {
+          errorSound.play();
+          typeEffect("Contraseña incorrecta. Intente nuevaente.", () => {
+            input.disabled = false;
+            input.focus();
+          });
+        }
+        input.value = '';
+      }
+    });
+  </script>
+</body>
+</html>
